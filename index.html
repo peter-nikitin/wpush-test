@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wpush Test</title>
 </head>
+
 <body>
+
+  <h1>Привет</h1>>
+
+  <p>Это сайт для тест вебпушей</p>
+  <p>Подписаться можно по кнопку <button id="subscribe">Подписать на пуши</button></p>
+  <p>Либо через попапчик</p>
 
 
   <script>
-    mindbox = window.mindbox || function() { mindbox.queue.push(arguments); };
+    mindbox = window.mindbox || function() {
+      mindbox.queue.push(arguments);
+    };
     mindbox.queue = mindbox.queue || [];
     mindbox('create', {
       firebaseMessagingSenderId: "855309246205"
     });
 
-    mindbox("webpush.create"); 
-</script>
-<script src="https://api.mindbox.ru/scripts/v1/tracker.js" async></script>
-  
+    mindbox("webpush.create");
+  </script>
+
+  <script>
+    var myButton = document.querySelector("#subscribe");
+
+
+    myButton.addEventListener("click", function() {
+      mindbox("webpush.subscribe", {
+        getSubscriptionOperation: "GetWebPushSubscription",
+        subscribeOperation: "SubscribeToWebpush",
+        onGranted: function() {},
+        onDenied: function() {}
+      });
+    });
+  </script>
+  <script src="https://api.mindbox.ru/scripts/v1/tracker.js" async></script>
+
 </body>
+
 </html>
