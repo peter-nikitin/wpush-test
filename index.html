@@ -15,9 +15,26 @@
   <p>Это сайт для тест вебпушей</p>
   <p>Подписаться можно по кнопку <button id="subscribe">Подписать на пуши</button></p>
   <p>Либо через попапчик</p>
-
-  <h1>А дальше сториз!</h1>
+  <hr>
+  <h2>Проверка данных JS SDK</h2>
+  <h3>Куки на домене</h3>
+  <p id="deviceUUID"></p><button id="getMindboxDeviceUUID">Проверить deviceUUID Mindbox </button>
+  <br>
+  <br>
+  <h3>Создать тестовго чувака в админке</h3>
+  <form id="TestDevajsUida">
+    <label>Email <input type="email" name="email" id="email"></label>
+    <button type="submit">Зарегать в админке</button>
+    <p id="result"></p>
+  </form>
+  <hr>
+  <h2>А дальше сториз!</h2>
   <div data-popmechanic-embed="31087"></div>
+
+
+  <hr>
+
+
 
   <script>
     mindbox = window.mindbox || function() {
@@ -25,6 +42,7 @@
     };
     mindbox.queue = mindbox.queue || [];
     mindbox('create', {
+      endpointId: 'wpush-test',
       firebaseMessagingSenderId: "855309246205"
     });
 
@@ -35,8 +53,20 @@
   <!--End of PopMechanic script-->
 
   <script>
-    var myButton = document.querySelector("#subscribe");
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
 
+    var myButton = document.querySelector("#subscribe");
+    const getMindboxDeviceUUIDbtn = document.querySelector("#getMindboxDeviceUUID")
+
+    getMindboxDeviceUUIDbtn.addEventListener("click", () => {
+      document.querySelector("#deviceUUID").innerHTML = getCookie("mindboxDeviceUUID")
+
+    });
 
     myButton.addEventListener("click", function() {
       mindbox("webpush.subscribe", {
@@ -46,6 +76,27 @@
         onDenied: function() {}
       });
     });
+
+    var testForm = document.querySelector("#TestDevajsUida");
+
+    testForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      mindbox("async", {
+        operation: "TestDevajsUida",
+        data: {
+          customer: {
+            email: document.querySelector("#email").value,
+          }
+        },
+        onSuccess: function() {
+          testForm.querySelector("#result").innerHTML = "Успешно отправлено"
+        },
+        onError: function(error) {
+          testForm.querySelector("#result").innerHTML = "Ошибка отправки"
+        }
+      });
+    })
   </script>
   <script src="https://api.mindbox.ru/scripts/v1/tracker.js" async></script>
 
