@@ -13,28 +13,37 @@
   <h1>Привет</h1>
 
   <p>Это сайт для тест вебпушей</p>
-  <p>Подписаться можно по кнопку <button id="subscribe">Подписать на пуши</button></p>
+  <p>Подписаться можно по кнопку <button id="subscribeToWebpush">Подписать на пуши</button></p>
   <p>Либо через попапчик</p>
   <hr>
+
+
   <h2>Проверка данных JS SDK</h2>
   <h3>Куки на домене</h3>
   <p id="deviceUUID"></p><button id="getMindboxDeviceUUID">Проверить deviceUUID Mindbox </button>
+  
   <br>
   <br>
+
+
   <h3>Создать тестовго чувака в админке</h3>
   <form id="TestDevajsUida">
     <label>Email <input type="email" name="email" id="email"></label>
-    <button type="submit">Зарегать в админке</button>
+    <button type="submit" id="createTestUser">Зарегать в админке</button>
     <p id="result"></p>
   </form>
+  <br>
+  <br>
+
+  <div><button id="viewProduct">Просмотреть рандомный продукт</button></div>
+
+
   <hr>
   <h2>А дальше сториз!</h2>
   <div data-popmechanic-embed="31087"></div>
 
 
   <hr>
-
-
 
   <script>
     mindbox = window.mindbox || function() {
@@ -60,26 +69,21 @@
       return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 
-    var myButton = document.querySelector("#subscribe");
-    const getMindboxDeviceUUIDbtn = document.querySelector("#getMindboxDeviceUUID")
 
-    getMindboxDeviceUUIDbtn.addEventListener("click", () => {
+    const getDeviceUUID = () => {
       document.querySelector("#deviceUUID").innerHTML = getCookie("mindboxDeviceUUID")
+    }
 
-    });
-
-    myButton.addEventListener("click", function() {
+    const subscribeToWebpush = () => {
       mindbox("webpush.subscribe", {
         getSubscriptionOperation: "GetWebPushSubscription",
         subscribeOperation: "SubscribeToWebpush",
         onGranted: function() {},
         onDenied: function() {}
       });
-    });
+    }
 
-    var testForm = document.querySelector("#TestDevajsUida");
-
-    testForm.addEventListener("submit", (e) => {
+    const createTestCustomer = (e) => {
       e.preventDefault();
 
       mindbox("async", {
@@ -90,12 +94,49 @@
           }
         },
         onSuccess: function() {
-          testForm.querySelector("#result").innerHTML = "Успешно отправлено"
+          document.querySelector("#result").innerHTML = "Успешно отправлено"
         },
         onError: function(error) {
-          testForm.querySelector("#result").innerHTML = "Ошибка отправки"
+          document.querySelector("#result").innerHTML = "Ошибка отправки"
         }
       });
+    }
+
+    const viewProduct = () => {
+      mindbox("async", {
+        operation: "TestProsmotraProduktov",
+        data: {
+          viewProduct: {
+            product: {
+              ids: {
+                website: Math.floor(Math.random() * 1000)
+              }
+            }
+          }
+        },
+        onSuccess: function() {},
+        onError: function(error) {}
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      switch (e.target.id) {
+        case "subscribeToWebpush":
+          subscribeToWebpush()
+          break;
+        case "createTestUser":
+          createTestCustomer(e)
+          break;
+        case "getMindboxDeviceUUID":
+          getDeviceUUID()
+          break;
+        case "viewProduct":
+        viewProduct()
+          break;
+
+        default:
+          break;
+      }
     })
   </script>
   <script src="https://api.mindbox.ru/scripts/v1/tracker.js" async></script>
